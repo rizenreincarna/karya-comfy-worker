@@ -14,9 +14,14 @@ from huggingface_hub import snapshot_download
 VOLUME = Path(os.environ.get("VOLUME", "/runpod-volume"))
 REPO = "Abiray/Minimax-h3-nvfp4-INT4-INT8-Convrot"
 
+# NOTE: the repo only ships int4_convrot / nvfp4_awq encoders. The int8_convrot
+# encoder is documented in the README but NOT present in the file listing, so
+# snapshot_download would silently skip it (text_encoders/ ends up empty).
+# int4_convrot is the same Qwen3-VL-32B encoder, 4-bit convrot — safe with the
+# int8 transformer (embeddings are dequantized at the interface).
 PATTERNS = [
     "MiniMax_H3_Ref2VA_pruned_int8_convrot.safetensors",
-    "text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+    "text_encoders/qwen3vl_32b_minimax_h3_int4_convrot.safetensors",
     "vae/minimax_h3_video_vae_fp16.safetensors",
     "vae/minimax_h3_audio_vae_fp32.safetensors",
 ]

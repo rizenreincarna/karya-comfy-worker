@@ -7,7 +7,8 @@ VOLUME=/runpod-volume
 
 if [ -d "$VOLUME" ]; then
   if [ ! -f "$VOLUME/models/diffusion_models/MiniMax_H3_Ref2VA_pruned_int8_convrot.safetensors" ] \
-     || [ ! -f "$VOLUME/models/checkpoints/flux1-dev-fp8.safetensors" ]; then
+     || [ ! -f "$VOLUME/models/checkpoints/flux1-dev-fp8.safetensors" ] \
+     || [ ! -f "$VOLUME/models/text_encoders/qwen3vl_32b_minimax_h3_int4_convrot.safetensors" ]; then
     echo "entrypoint: first boot - syncing models to $VOLUME"
     mkdir -p "$VOLUME/models/diffusion_models" "$VOLUME/models/text_encoders" \
              "$VOLUME/models/vae" "$VOLUME/models/checkpoints"

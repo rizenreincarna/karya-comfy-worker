@@ -89,7 +89,7 @@ function h3VideoWorkflow(prompt: string, refImage: string): Record<string, unkno
   const p = prompt + ". Photorealistic, sharp focus, perfect anatomy, five fingers, no text, no letters, no words, no captions, no watermark, no logos, no gibberish";
   return {
     "186": { class_type: "UNETLoader", inputs: { unet_name: "MiniMax_H3_Ref2VA_pruned_int8_convrot.safetensors", weight_dtype: "default" } },
-    "187": { class_type: "CLIPLoader", inputs: { clip_name: "qwen3vl_32b_minimax_h3_int8_convrot.safetensors", type: "minimax" } },
+    "187": { class_type: "CLIPLoader", inputs: { clip_name: "qwen3vl_32b_minimax_h3_int4_convrot.safetensors", type: "minimax" } },
     "119": { class_type: "VAELoader", inputs: { vae_name: "minimax_h3_video_vae_fp16.safetensors" } },
     "120": { class_type: "VAELoader", inputs: { vae_name: "minimax_h3_audio_vae_fp32.safetensors" } },
     "137": { class_type: "LoadImage", inputs: { image: refImage, upload: "image" } },
