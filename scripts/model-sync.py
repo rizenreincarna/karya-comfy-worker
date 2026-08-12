@@ -26,14 +26,30 @@ PATTERNS = [
     "vae/minimax_h3_audio_vae_fp32.safetensors",
 ]
 
-print("model-sync: pulling H3 stack (int8 convrot + encoder + VAEs)")
-out = snapshot_download(
-    repo_id=REPO,
-    allow_patterns=PATTERNS,
-    local_dir=str(VOLUME / "models"),
-    local_dir_use_symlinks=False,
-)
-print(f"model-sync: snapshot at {out}")
+# Skip files already on the volume so re-syncs only fetch what's missing
+# (idempotent). snapshot_download would otherwise re-download everything.
+# The transformer is checked at its destination (diffusion_models/ after the
+# first-boot move); the download pattern targets the repo-root path.
+MISSING = []
+for pat in PATTERNS:
+    if pat.startswith("MiniMax_H3_Ref2VA"):
+        check = VOLUME / "models" / "diffusion_models" / pat
+    else:
+        check = VOLUME / "models" / pat
+    if not check.exists():
+        MISSING.append(pat)
+
+if MISSING:
+    print(f"model-sync: pulling H3 stack ({len(MISSING)} file(s) missing: {MISSING})")
+    out = snapshot_download(
+        repo_id=REPO,
+        allow_patterns=MISSING,
+        local_dir=str(VOLUME / "models"),
+        local_dir_use_symlinks=False,
+    )
+    print(f"model-sync: snapshot at {out}")
+else:
+    print("model-sync: H3 stack already complete on volume")
 
 # Move the transformer (repo root) into diffusion_models/
 src = VOLUME / "models" / "MiniMax_H3_Ref2VA_pruned_int8_convrot.safetensors"
