@@ -10,7 +10,8 @@ RUN cd /comfyui \
   && python -c "import pathlib; hits=[p for p in pathlib.Path('/comfyui').rglob('*.py') if 'MiniMaxH3' in p.read_text(errors='ignore')]; assert hits, 'H3 nodes missing'; print('H3 files:', hits)"
 
 # --- Let ComfyUI find diffusion_models on the network volume ---
-RUN sed -i 's|  unet: models/unet/|  unet: models/unet/\n  diffusion_models: models/diffusion_models/|' /comfyui/extra_model_paths.yaml
+RUN sed -i 's|  unet: models/unet/|  unet: models/unet/\n  diffusion_models: models/diffusion_models/\n  text_encoders: models/text_encoders/|' /comfyui/extra_model_paths.yaml \
+  && grep -c "text_encoders" /comfyui/extra_model_paths.yaml
 
 # --- First-boot model sync + custom handler ---
 COPY scripts/model-sync.py /model-sync.py
