@@ -21,6 +21,22 @@ import runpod
 COMFYUI_URL = os.environ.get("COMFYUI_URL", "http://127.0.0.1:8188")
 POLL_SECONDS = 3
 MAX_POLLS = 600  # 30 min cap for slow H3
+WARMUP_SECONDS = 15 * 60  # ComfyUI can take minutes loading volume models
+
+
+def wait_for_comfyui(timeout_sec: int = WARMUP_SECONDS) -> None:
+    """Block until ComfyUI's API is reachable (model load on a network volume is slow)."""
+    deadline = time.time() + timeout_sec
+    while time.time() < deadline:
+        try:
+            with urllib.request.urlopen(f"{COMFYUI_URL}/system_stats", timeout=5) as resp:
+                if resp.status == 200:
+                    print(f"handler: ComfyUI reachable after {timeout_sec - (deadline - time.time()):.0f}s")
+                    return
+        except Exception:
+            pass
+        time.sleep(5)
+    raise RuntimeError(f"ComfyUI not reachable at {COMFYUI_URL} after {timeout_sec}s")
 
 
 def submit_prompt(workflow: dict) -> str:
@@ -122,4 +138,5 @@ def handler(job):
 
 
 if __name__ == "__main__":
+    wait_for_comfyui()
     runpod.serverless.start({"handler": handler})
