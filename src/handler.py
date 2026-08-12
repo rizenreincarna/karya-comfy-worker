@@ -97,10 +97,9 @@ def handler(job):
             data = ref["data"]
             if "," in data and data.startswith("data:"):
                 data = data.split(",", 1)[1]
-            input_dir = os.path.join(os.path.dirname(COMFYUI_URL.replace("http://", "")), "")
-            # The worker mounts ComfyUI at /app/ComfyUI; input dir is predictable
+            # The worker's ComfyUI input dir is at /comfyui/input (base image layout)
             safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", ref["filename"])
-            dest = os.path.join("/app/ComfyUI/input", safe_name)
+            dest = os.path.join("/comfyui/input", safe_name)
             with open(dest, "wb") as fh:
                 fh.write(base64.b64decode(data))
             # point LoadImage at the written file

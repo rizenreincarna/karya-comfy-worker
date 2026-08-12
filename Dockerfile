@@ -1,7 +1,8 @@
 # Karya serverless worker — ComfyUI (v0.31.1, native MiniMax-H3) + FLUX.1-dev.
-# Base: RunPod worker-comfyui (official handler; accepts input.workflow + input.images).
-# Customizations: (1) ComfyUI upgraded to v0.31.1 for native MiniMaxH3 nodes,
-# (2) first-boot model sync into the attached network volume.
+# Base: RunPod worker-comfyui (official handler). Customizations:
+#  (1) ComfyUI upgraded to v0.31.1 for native MiniMaxH3 nodes,
+#  (2) first-boot model sync into the attached network volume,
+#  (3) custom handler that accepts inline base64 ref images for video I2V.
 
 FROM runpod/worker-comfyui:5.8.6-base
 
@@ -15,8 +16,9 @@ RUN cd /comfyui \
 # --- Let ComfyUI find diffusion_models on the network volume ---
 RUN sed -i 's|  unet: models/unet/|  unet: models/unet/\n  diffusion_models: models/diffusion_models/|' /comfyui/extra_model_paths.yaml
 
-# --- First-boot model sync ---
+# --- First-boot model sync + custom handler ---
 COPY scripts/model-sync.py /model-sync.py
+COPY src/handler.py /handler.py
 COPY scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
