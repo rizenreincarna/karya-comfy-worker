@@ -81,6 +81,7 @@ LTX_PATTERNS = [
     "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
     "vae/ltx-2.5-video-vae-bf16.safetensors",
     "vae/ltx-2.5-audio-vae-bf16.safetensors",
+    "model_patches/ltx-2.5-duration-head-bf16.safetensors",
 ]
 ltx_missing = [p for p in LTX_PATTERNS if not (VOLUME / "models" / p).exists()]
 if ltx_missing:
