@@ -25,7 +25,9 @@
  },
  "383": {
   "class_type": "PrimitiveBoolean",
-  "inputs": {}
+  "inputs": {
+   "value": true
+  }
  },
  "364": {
   "class_type": "CLIPTextEncode",
@@ -81,11 +83,15 @@
  },
  "362": {
   "class_type": "PrimitiveInt",
-  "inputs": {}
+  "inputs": {
+   "value": 5
+  }
  },
  "363": {
   "class_type": "PrimitiveBoolean",
-  "inputs": {}
+  "inputs": {
+   "value": false
+  }
  },
  "365": {
   "class_type": "LTXVConditioning",
@@ -121,7 +127,9 @@
  },
  "372": {
   "class_type": "PrimitiveInt",
-  "inputs": {}
+  "inputs": {
+   "value": 1280
+  }
  },
  "373": {
   "class_type": "CLIPTextEncode",
@@ -142,7 +150,9 @@
  },
  "360": {
   "class_type": "PrimitiveInt",
-  "inputs": {}
+  "inputs": {
+   "value": 720
+  }
  },
  "352": {
   "class_type": "KSamplerSelect",
@@ -164,7 +174,9 @@
  },
  "361": {
   "class_type": "PrimitiveInt",
-  "inputs": {}
+  "inputs": {
+   "value": 24
+  }
  },
  "371": {
   "class_type": "LatentUpscaleModelLoader",
@@ -289,7 +301,17 @@
  },
  "351": {
   "class_type": "ResizeImageMaskNode",
-  "inputs": {}
+  "inputs": {
+   "input": [
+    "900",
+    0
+   ],
+   "resize_type": "scale dimensions",
+   "resize_type.height": 720,
+   "resize_type.width": 1280,
+   "resize_type.crop": "disabled",
+   "scale_method": "lanczos"
+  }
  },
  "353": {
   "class_type": "ComfyMathExpression",
@@ -317,7 +339,8 @@
    "image": [
     "351",
     0
-   ]
+   ],
+   "img_compression": 18
   }
  },
  "356": {
@@ -527,6 +550,12 @@
     "359",
     0
    ]
+  }
+ },
+ "900": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "ref.webp"
   }
  }
 }

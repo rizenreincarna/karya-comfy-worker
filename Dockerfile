@@ -11,7 +11,7 @@ RUN cd /comfyui \
   && python -c "import pathlib; hits=[p for p in pathlib.Path('/comfyui').rglob('*.py') if 'duration_head' in p.read_text(errors='ignore')]; assert hits, 'LTX-2.5 duration_head missing'; print('LTX-2.5 files:', hits)"
 
 # --- Let ComfyUI find diffusion_models on the network volume ---
-RUN sed -i 's|  unet: models/unet/|  unet: models/unet/\n  diffusion_models: models/diffusion_models/\n  text_encoders: models/text_encoders/|' /comfyui/extra_model_paths.yaml \
+RUN sed -i 's|  unet: models/unet/|  unet: models/unet/\n  diffusion_models: models/diffusion_models/\n  text_encoders: models/text_encoders/\n  latent_upscale_models: models/latent_upscale_models/\n  model_patches: models/model_patches/|' /comfyui/extra_model_paths.yaml \
   && grep -c "text_encoders" /comfyui/extra_model_paths.yaml
 
 # --- First-boot model sync + custom handler ---
