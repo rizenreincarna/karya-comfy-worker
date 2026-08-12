@@ -14,6 +14,7 @@ import os
 import subprocess
 import time
 import urllib.request
+import urllib.error
 
 import runpod
 
@@ -29,8 +30,13 @@ def submit_prompt(workflow: dict) -> str:
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        data = json.loads(resp.read())
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        # surface ComfyUI's validation detail (model not found, bad input, etc.)
+        body = e.read().decode("utf-8", "replace")[:2000]
+        raise RuntimeError(f"ComfyUI /prompt {e.code}: {body}") from e
     pid = data.get("prompt_id")
     if not pid:
         raise RuntimeError(f"ComfyUI submit failed: {data}")
