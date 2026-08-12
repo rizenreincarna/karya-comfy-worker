@@ -1,0 +1,10 @@
+{
+  "3": {"class_type": "KSampler", "inputs": {"seed": 42, "steps": 20, "cfg": 1.0, "sampler_name": "euler", "scheduler": "simple", "denoise": 1.0, "model": ["30", 0], "positive": ["6", 0], "negative": ["7", 0], "latent_image": ["5", 0]}},
+  "5": {"class_type": "EmptyLatentImage", "inputs": {"width": 1024, "height": 1024, "batch_size": 1}},
+  "6": {"class_type": "CLIPTextEncode", "inputs": {"text": "PROMPT_HERE", "clip": ["30", 1]}},
+  "7": {"class_type": "CLIPTextEncode", "inputs": {"text": "text, letters, words, watermark, logo, signature, typography, caption, writing, gibberish, brand name, title, label", "clip": ["30", 1]}},
+  "8": {"class_type": "VAEDecode", "inputs": {"samples": ["3", 0], "vae": ["30", 2]}},
+  "9": {"class_type": "SaveImage", "inputs": {"filename_prefix": "karya_gen", "images": ["8", 0]}},
+  "30": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "flux1-dev-fp8.safetensors"}},
+  "35": {"class_type": "FluxGuidance", "inputs": {"guidance": 3.5, "conditioning": ["6", 0]}}
+}
