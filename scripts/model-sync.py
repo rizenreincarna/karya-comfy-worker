@@ -69,4 +69,45 @@ if not flux.exists():
         local_dir_use_symlinks=False,
     )
 
+# ---------------------------------------------------------------------------
+# LTX-2.5 (multi-shot audio-video) — GATED repo, needs HF_TOKEN with gated
+# access. Files land in their own dirs so H3/FLUX are untouched.
+# ComfyUI v0.32.0 required (duration_head nodes). The gemma4_e2b prompt
+# enhancer is a separate UNGATED repo (Comfy-Org/gemma-4).
+# ---------------------------------------------------------------------------
+LTX_REPO = "Lightricks/LTX-2.5"
+LTX_PATTERNS = [
+    "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+    "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+    "vae/ltx-2.5-video-vae-bf16.safetensors",
+    "vae/ltx-2.5-audio-vae-bf16.safetensors",
+]
+ltx_missing = [p for p in LTX_PATTERNS if not (VOLUME / "models" / p).exists()]
+if ltx_missing:
+    if not os.environ.get("HF_TOKEN"):
+        print("model-sync: WARNING — LTX-2.5 files missing but HF_TOKEN not set; skipping LTX sync")
+    else:
+        print(f"model-sync: pulling LTX-2.5 stack ({len(ltx_missing)} missing: {ltx_missing})")
+        snapshot_download(
+            repo_id=LTX_REPO,
+            allow_patterns=ltx_missing,
+            local_dir=str(VOLUME / "models"),
+            local_dir_use_symlinks=False,
+            token=os.environ.get("HF_TOKEN"),
+        )
+        print("model-sync: LTX-2.5 stack done")
+else:
+    print("model-sync: LTX-2.5 stack already complete on volume")
+
+# gemma4_e2b prompt enhancer (ungated, separate repo)
+gemma_e2b = VOLUME / "models" / "text_encoders" / "gemma4_e2b_it_bf16.safetensors"
+if not gemma_e2b.exists():
+    print("model-sync: pulling gemma4_e2b prompt enhancer")
+    snapshot_download(
+        repo_id="Comfy-Org/gemma-4",
+        allow_patterns=["text_encoders/gemma4_e2b_it_bf16.safetensors"],
+        local_dir=str(VOLUME / "models"),
+        local_dir_use_symlinks=False,
+    )
+
 print("model-sync: complete")

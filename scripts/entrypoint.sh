@@ -8,8 +8,10 @@ VOLUME=/runpod-volume
 if [ -d "$VOLUME" ]; then
   if [ ! -f "$VOLUME/models/diffusion_models/MiniMax_H3_Ref2VA_pruned_int8_convrot.safetensors" ] \
      || [ ! -f "$VOLUME/models/checkpoints/flux1-dev-fp8.safetensors" ] \
-     || [ ! -f "$VOLUME/models/text_encoders/qwen3vl_32b_minimax_h3_int4_convrot.safetensors" ]; then
-    echo "entrypoint: first boot - syncing models to $VOLUME"
+     || [ ! -f "$VOLUME/models/text_encoders/qwen3vl_32b_minimax_h3_int4_convrot.safetensors" ] \
+     || [ ! -f "$VOLUME/models/diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors" ] \
+     || [ ! -f "$VOLUME/models/text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors" ]; then
+    echo "entrypoint: syncing models to $VOLUME (H3/FLUX/LTX)"
     mkdir -p "$VOLUME/models/diffusion_models" "$VOLUME/models/text_encoders" \
              "$VOLUME/models/vae" "$VOLUME/models/checkpoints"
     VOLUME="$VOLUME" python /model-sync.py
