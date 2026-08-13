@@ -79,3 +79,8 @@ post_commands:
   # Python one-liner: no shell quoting, so ${WORKSPACE} is interpolated by
   # python (not the shell) and there is zero ambiguity.
   - "python3 -c \"import os; p=os.path.expandvars('${WORKSPACE:-/workspace}/ComfyUI/extra_model_paths.yaml'); open(p,'w').write('vast_models:\\n  base_path: '+os.path.expandvars('${WORKSPACE:-/workspace}/ComfyUI/models')+'\\n  diffusion_models: diffusion_models/\\n  text_encoders: text_encoders/\\n  vae: vae/\\n  model_patches: model_patches/\\n  latent_upscale_models: latent_upscale_models/\\n  checkpoints: checkpoints/\\n')\""
+  # Vast base image ships a mismatched api-wrapper: result.py Result model lacks the
+  # comfyui_job_id field that generation_worker.py sets 77x -> pydantic raises
+  # '\"Result\" object has no field \"comfyui_job_id\"' on uncached FLUX jobs.
+  # Patch: add the field so the wrapper can run uncached workflows.
+  - "python3 -c \"p='/opt/comfyui-api-wrapper/responses/result.py'; s=open(p).read(); s=s.replace('class Result(BaseModel):', 'class Result(BaseModel):\\n    comfyui_job_id: str = Field(default=\\'\\')', 1); open(p,'w').write(s)\""
