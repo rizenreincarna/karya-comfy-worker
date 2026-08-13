@@ -71,4 +71,6 @@ post_commands:
   - "cd ${WORKSPACE:-/workspace}/ComfyUI && git fetch --tags origin && git checkout -q v0.32.0"
   - "uv pip install --no-cache --no-deps --python /venv/main/bin/python -r ${WORKSPACE:-/workspace}/ComfyUI/requirements.txt"
   - "mkdir -p ${WORKSPACE:-/workspace}/ComfyUI/models/diffusion_models ${WORKSPACE:-/workspace}/ComfyUI/models/text_encoders ${WORKSPACE:-/workspace}/ComfyUI/models/vae ${WORKSPACE:-/workspace}/ComfyUI/models/model_patches ${WORKSPACE:-/workspace}/ComfyUI/models/latent_upscale_models"
-  - "printf '\nvast_models:\n  base_path: ${WORKSPACE:-/workspace}/ComfyUI/models\n  diffusion_models: diffusion_models/\n  text_encoders: text_encoders/\n  vae: vae/\n  model_patches: model_patches/\n  latent_upscale_models: latent_upscale_models/\n' >> ${WORKSPACE:-/workspace}/ComfyUI/extra_model_paths.yaml"
+  # Single-line printf (double quotes): ${WORKSPACE} expands AND \n become newlines.
+  # A multi-line heredoc here gets split into separate shell commands by the provisioner.
+  - "printf 'vast_models:\\n  base_path: ${WORKSPACE:-/workspace}/ComfyUI/models\\n  diffusion_models: diffusion_models/\\n  text_encoders: text_encoders/\\n  vae: vae/\\n  model_patches: model_patches/\\n  latent_upscale_models: latent_upscale_models/\\n' > ${WORKSPACE:-/workspace}/ComfyUI/extra_model_paths.yaml"
