@@ -75,7 +75,7 @@ post_commands:
   # torch from PyPI (bare `torch` line) -> replaces cu128 -> RTX 5090 breaks on
   # the SECOND boot, even though our first-boot install used --no-deps. Patch it.
   - "sed -i 's|uv pip --no-cache-dir install -r requirements.txt|uv pip --no-cache-dir install --no-deps -r requirements.txt|' /opt/supervisor-scripts/comfyui.sh"
-  - "mkdir -p ${WORKSPACE:-/workspace}/ComfyUI/models/diffusion_models ${WORKSPACE:-/workspace}/ComfyUI/models/text_encoders ${WORKSPACE:-/workspace}/ComfyUI/models/vae ${WORKSPACE:-/workspace}/ComfyUI/models/model_patches ${WORKSPACE:-/workspace}/ComfyUI/models/latent_upscale_models"
+  - "mkdir -p ${WORKSPACE:-/workspace}/ComfyUI/models/diffusion_models ${WORKSPACE:-/workspace}/ComfyUI/models/text_encoders ${WORKSPACE:-/workspace}/ComfyUI/models/vae ${WORKSPACE:-/workspace}/ComfyUI/models/model_patches ${WORKSPACE:-/workspace}/ComfyUI/models/latent_upscale_models ${WORKSPACE:-/workspace}/ComfyUI/models/checkpoints"
   # Python one-liner: no shell quoting, so ${WORKSPACE} is interpolated by
   # python (not the shell) and there is zero ambiguity.
-  - "python3 -c \"import os; p=os.path.expandvars('${WORKSPACE:-/workspace}/ComfyUI/extra_model_paths.yaml'); open(p,'w').write('vast_models:\\n  base_path: '+os.path.expandvars('${WORKSPACE:-/workspace}/ComfyUI/models')+'\\n  diffusion_models: diffusion_models/\\n  text_encoders: text_encoders/\\n  vae: vae/\\n  model_patches: model_patches/\\n  latent_upscale_models: latent_upscale_models/\\n')\""
+  - "python3 -c \"import os; p=os.path.expandvars('${WORKSPACE:-/workspace}/ComfyUI/extra_model_paths.yaml'); open(p,'w').write('vast_models:\\n  base_path: '+os.path.expandvars('${WORKSPACE:-/workspace}/ComfyUI/models')+'\\n  diffusion_models: diffusion_models/\\n  text_encoders: text_encoders/\\n  vae: vae/\\n  model_patches: model_patches/\\n  latent_upscale_models: latent_upscale_models/\\n  checkpoints: checkpoints/\\n')\""
